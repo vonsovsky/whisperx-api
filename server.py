@@ -7,7 +7,6 @@ from fastapi import FastAPI, UploadFile
 from pydantic import BaseModel
 
 from transcriber import Transcriber
-import whisperx
 
 BATCH_SIZE = 16
 
