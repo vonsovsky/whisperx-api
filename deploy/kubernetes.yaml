@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisperx-api
+  labels:
+    app.kubernetes.io/name: whisperx-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: whisperx
+      app.kubernetes.io/name: whisperx-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: whisperx
+        app.kubernetes.io/name: whisperx-api
+    spec:
+      containers:
+        - name: whisperx-api-1
+          image: vonsovsky/whisperx-api:v0.1.0-large-v2
+          env:
+          - name: TIMEOUT
+            value: "60"
+          - name: DEVICE_TYPE
+            value: "gpu"
+          imagePullPolicy: Always
+          resources:
+            limits:
+            cpu: "1"
+            memory: 8Gi
+            nvidia.com/gpu: 1

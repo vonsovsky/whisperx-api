@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MODEL=large-v2
-PROJECT_NAME=whisper-api
+PROJECT_NAME=whisperx-api
 VERSION=v0.1.0-$MODEL
 
 IMAGE_NAME=${PROJECT_NAME}:${VERSION}
