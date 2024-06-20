@@ -3,3 +3,5 @@ fastapi==0.111.0
 aiofiles==23.2.1
 python-multipart
 numpy<2.0
+tokenizers==0.15.2
+ctranslate2==3.24.0
