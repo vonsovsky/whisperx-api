@@ -3,7 +3,8 @@ from tempfile import TemporaryDirectory
 from typing import Optional
 
 import aiofiles
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
 from transcriber import Transcriber
@@ -22,6 +23,7 @@ class Audio(BaseModel):
 
 
 app = FastAPI()
+security = HTTPBearer()
 
 device = "cpu"
 compute_type = "int8"
@@ -38,6 +40,18 @@ transcriber = Transcriber(
 )
 
 
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    print(f"Token: {token}")
+    if token != os.getenv("AUTH_TOKEN"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return token
+
+
 @app.get("/status/")
 async def status():
     import torch
@@ -48,8 +62,9 @@ async def status():
     }
 
 
+@app.get("/secure-endpoint")
 @app.post("/transcribe/")
-async def transcribe(file: UploadFile):
+async def transcribe(file: UploadFile, token: str = Depends(get_current_user)):
     with TemporaryDirectory() as temp_dir:
         file_path = os.path.join(temp_dir, file.filename)
 

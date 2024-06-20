@@ -24,6 +24,8 @@ spec:
             value: "60"
           - name: DEVICE_TYPE
             value: "gpu"
+          - name: AUTH_TOKEN
+            value: "token"
           imagePullPolicy: Always
           resources:
             limits:
